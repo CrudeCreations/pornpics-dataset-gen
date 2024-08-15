@@ -20,7 +20,7 @@ const (
 	baseURL          = "https://www.pornpics.com"
 	popularAPI       = "/popular/"
 	searchAPI        = "/search/srch.php"
-	query            = "blacked"
+	query            = "tessa taylor"
 	imageDir         = "dataset"
 	limitPerPage     = 5
 	maxConcurrentReq = 10
@@ -34,10 +34,13 @@ type ImageInfo struct {
 
 func main() {
 	fmt.Println("Starting PornPics Dataset Generator...")
-
+	offsetFileLoc := offsetFile
+	if query != "" {
+		offsetFileLoc = strings.Replace(offsetFileLoc, ".txt", "-"+query+".txt", 1)
+	}
 	os.MkdirAll(imageDir, 0755)
 
-	offset, err := loadOffset()
+	offset, err := loadOffset(offsetFileLoc)
 	if err != nil {
 		fmt.Println("Error loading offset:", err)
 		offset = 1
@@ -77,7 +80,7 @@ func main() {
 
 		offset += limitPerPage
 
-		if err := saveOffset(offset); err != nil {
+		if err := saveOffset(offset, offsetFileLoc); err != nil {
 			fmt.Println("Error saving offset:", err)
 		}
 
@@ -218,8 +221,8 @@ func downloadImage(url, dir, desc string, categories, tags []string, models []st
 	return nil
 }
 
-func loadOffset() (int, error) {
-	file, err := os.Open(offsetFile)
+func loadOffset(offsetFileLoc string) (int, error) {
+	file, err := os.Open(offsetFileLoc)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return 1, nil
@@ -240,8 +243,8 @@ func loadOffset() (int, error) {
 	return 1, nil
 }
 
-func saveOffset(offset int) error {
-	file, err := os.Create(offsetFile)
+func saveOffset(offset int, offsetFileLoc string) error {
+	file, err := os.Create(offsetFileLoc)
 	if err != nil {
 		return err
 	}

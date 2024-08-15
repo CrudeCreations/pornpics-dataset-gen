@@ -1,6 +1,6 @@
 dataset
 mobilenet_v2_140_224
-offset.txt
+offset*
 refined
 
 .exe

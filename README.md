@@ -10,6 +10,8 @@ This Go application scrapes images and their associated metadata from PornPics t
 - Creates a text file for each image containing the prompt (alt text, categories, and tags) for [OneTrainer](https://github.com/Nerogar/OneTrainer).
 - Persists the current offset to allow resuming the scraping process on subsequent runs.
 - Utilizes concurrency to improve performance.
+- Image reviewing tool under /review
+    - This allows for you to review the dataset and refine any labels into a new location
 
 ## Requirements
 
@@ -41,5 +43,13 @@ This Go application scrapes images and their associated metadata from PornPics t
 - The current offset will be saved to offset.txt after each page.
 - You can stop the application at any time (e.g., with Ctrl+C), and it will resume from the last saved offset - when you run it again.
 
+4. **Run the reviewer**
+    ```bash
+    cd review
+    go run review.go
+    ```
+
+    And go visit `http://localhost:8080` to start reviewing.
+    
 ## Disclaimer
 `This application is provided for educational and research purposes only. The author is not responsible for any misuse or consequences arising from its use.`

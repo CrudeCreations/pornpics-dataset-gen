@@ -4,19 +4,23 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 const (
 	baseURL          = "https://www.pornpics.com"
 	popularAPI       = "/popular/"
+	searchAPI        = "/search/srch.php"
+	query            = "blacked"
 	imageDir         = "dataset"
 	limitPerPage     = 5
 	maxConcurrentReq = 10
@@ -41,8 +45,12 @@ func main() {
 
 	for {
 		fmt.Printf("Fetching images from offset %d...\n", offset)
+		imgPath := popularAPI
+		if query != "" {
+			imgPath = searchAPI
+		}
 
-		imageInfos, err := fetchPopularImages(limitPerPage, offset)
+		imageInfos, err := fetchImages(imgPath, query, limitPerPage, offset)
 		if err != nil {
 			fmt.Println("Error fetching popular images:", err)
 			time.Sleep(5 * time.Second) // Wait and retry on error
@@ -84,13 +92,14 @@ func main() {
 	fmt.Println("Finished generating dataset.")
 }
 
-func fetchPopularImages(limit, offset int) ([]ImageInfo, error) {
-	url := fmt.Sprintf("%s%s?limit=%d&offset=%d", baseURL, popularAPI, limit, offset)
+func fetchImages(imgPath, query string, limit, offset int) ([]ImageInfo, error) {
+	url := fmt.Sprintf("%s%s?q=%s&lang=en&limit=%d&offset=%d", baseURL, imgPath, url.QueryEscape(query), limit, offset)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

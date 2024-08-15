@@ -1,6 +1,7 @@
 dataset
 mobilenet_v2_140_224
 offset.txt
+refined
 
 .exe
 *.exe~
@@ -17,3 +18,4 @@ go.work.sum
 
 .env
 offset.txt
+review/processed.json

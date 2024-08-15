@@ -11,6 +11,7 @@ import (
 	"path"
 	"strings"
 	"sync"
+	"time"
 )
 
 const (
@@ -28,6 +29,8 @@ type ImageInfo struct {
 }
 
 func main() {
+	fmt.Println("Starting PornPics Dataset Generator...")
+
 	os.MkdirAll(imageDir, 0755)
 
 	offset, err := loadOffset()
@@ -35,12 +38,18 @@ func main() {
 		fmt.Println("Error loading offset:", err)
 		offset = 1
 	}
+
 	for {
+		fmt.Printf("Fetching images from offset %d...\n", offset)
+
 		imageInfos, err := fetchPopularImages(limitPerPage, offset)
 		if err != nil {
 			fmt.Println("Error fetching popular images:", err)
-			break
+			time.Sleep(5 * time.Second) // Wait and retry on error
+			continue
 		}
+
+		fmt.Printf("Fetched %d images. Processing galleries...\n", len(imageInfos))
 
 		var wg sync.WaitGroup
 		sem := make(chan struct{}, maxConcurrentReq)
@@ -64,10 +73,15 @@ func main() {
 			fmt.Println("Error saving offset:", err)
 		}
 
+		fmt.Printf("Offset updated to %d. Continuing...\n", offset)
+
 		if len(imageInfos) < limitPerPage {
+			fmt.Println("Reached the end of available images. Stopping.")
 			break
 		}
 	}
+
+	fmt.Println("Finished generating dataset.")
 }
 
 func fetchPopularImages(limit, offset int) ([]ImageInfo, error) {
@@ -109,12 +123,12 @@ func processGallery(info ImageInfo) error {
 	models := extractModels(doc)
 	channels := extractChannels(doc)
 
-	if len(categories) == 0 {
-		fmt.Println("No categories found for gallery:", info.GalleryURL)
+	if len(channels) < 2 {
+		fmt.Println("No channels found for gallery:", info.GalleryURL)
 		return nil
 	}
 
-	categoryDir := path.Join(imageDir, categories[0])
+	categoryDir := path.Join(imageDir, channels[1])
 	os.MkdirAll(categoryDir, 0755)
 
 	doc.Find("#tiles .thumbwook img").Each(func(i int, img *goquery.Selection) {

@@ -20,7 +20,7 @@ const (
 	baseURL          = "https://www.pornpics.com"
 	popularAPI       = "/popular/"
 	searchAPI        = "/search/srch.php"
-	query            = "tessa taylor"
+	query            = "" //Add a query to switch from popular to specific term
 	imageDir         = "dataset"
 	limitPerPage     = 5
 	maxConcurrentReq = 10

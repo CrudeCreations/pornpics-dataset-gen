@@ -16,7 +16,6 @@ This Go application scrapes images and their associated metadata from PornPics t
 ## Requirements
 
 - Go (version 1.16 or higher)
-- `goquery` library: `go get github.com/PuerkitoBio/goquery`
 
 ## Usage
 
@@ -30,10 +29,27 @@ This Go application scrapes images and their associated metadata from PornPics t
 2. **Install dependencies**
 
     ```bash
-    go get github.com/PuerkitoBio/goquery
+    go install
     ```
 
-3. **Run the application**
+3. **Configure Params in main.go**
+
+    Currently popular image scraping is broken so you need to put a search term in until I resolve.
+
+    ```go
+    const (
+        baseURL          = "https://www.pornpics.com"
+        popularAPI       = "/popular/"
+        searchAPI        = "/search/srch.php"
+        query            = "strip tease" //Empty query searches popular images
+        imageDir         = "dataset/"
+        limitPerPage     = 5
+        maxConcurrentReq = 10
+        offsetFile       = "offset.txt"
+    )
+    ```
+
+4. **Run the application**
 
     ```bash
     go run main.go

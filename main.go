@@ -20,8 +20,8 @@ const (
 	baseURL          = "https://www.pornpics.com"
 	popularAPI       = "/popular/"
 	searchAPI        = "/search/srch.php"
-	query            = "" //Add a query to switch from popular to specific term
-	imageDir         = "dataset"
+	query            = "strip tease" //Empty query searches popular images
+	imageDir         = "dataset/"
 	limitPerPage     = 5
 	maxConcurrentReq = 10
 	offsetFile       = "offset.txt"

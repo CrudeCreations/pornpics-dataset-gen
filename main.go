@@ -18,12 +18,12 @@ import (
 
 const (
 	baseURL          = "https://www.pornpics.com"
-	popularAPI       = "/popular/"
+	popularAPI       = "/tags/"
 	searchAPI        = "/search/srch.php"
-	query            = "strip tease" //Empty query searches popular images
+	query            = "pussy piercing" //Empty query searches popular images
 	imageDir         = "dataset/"
-	limitPerPage     = 5
-	maxConcurrentReq = 10
+	limitPerPage     = 20
+	maxConcurrentReq = 20
 	offsetFile       = "offset.txt"
 )
 
